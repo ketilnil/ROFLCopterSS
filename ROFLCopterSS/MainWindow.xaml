@@ -13,6 +13,6 @@
         Loaded="Window_Loaded"
         >
     <Grid x:Name="MainGrid">
-        <Image x:Name="Roflcopter" gif:ImageBehavior.AnimatedSource="9ff.gif" Stretch="None"/>
+        <Image x:Name="Roflcopter" gif:ImageBehavior.AnimatedSource="roflinvert.gif" Stretch="None"/>
     </Grid>
 </Window>

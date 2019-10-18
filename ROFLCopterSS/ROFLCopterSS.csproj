@@ -109,5 +109,8 @@
   <ItemGroup>
     <Resource Include="9ff.gif" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="roflinvert.gif" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
