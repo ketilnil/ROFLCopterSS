@@ -8,11 +8,12 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         Background="Transparent" WindowStyle="None" ShowInTaskbar="False" ResizeMode="NoResize"
-        MouseDown="Window_MouseDown"
+        MouseMove="Window_MouseMove"
         KeyDown="Window_KeyDown"
         Loaded="Window_Loaded"
         >
+        <!--gif:ImageBehavior.AnimateInDesignMode="True"-->
     <Grid x:Name="MainGrid">
-        <Image x:Name="Roflcopter" gif:ImageBehavior.AnimatedSource="roflinvert.gif" Stretch="None"/>
+        <!--<Image x:Name="Roflcopter" gif:ImageBehavior.AnimatedSource="roflinvert.gif" Stretch="None"/>-->
     </Grid>
 </Window>
