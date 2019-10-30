@@ -16,6 +16,7 @@ namespace ROFLCopterSS
             {
                 foreach (Screen s in Screen.AllScreens)
                 {
+                    
                     if (s != Screen.PrimaryScreen)
                     {
                         var window = new Blackout
@@ -39,6 +40,10 @@ namespace ROFLCopterSS
                         window.Show();
                     }
                 }
+
+
+                var roflCopter = new ROFLCopter();
+                roflCopter.AttachToWindow(MainWindow);
             }
         }
     }
