@@ -22,7 +22,7 @@ namespace ROFLCopterSS
                     
                     if (s != Screen.PrimaryScreen)
                     {
-                        var window = new Blackout
+                        var window = new MainWindow
                         {
                             Left = s.WorkingArea.Left,
                             Top = s.WorkingArea.Top,
@@ -49,9 +49,7 @@ namespace ROFLCopterSS
                 }
 
 
-                var roflCopter = new ROFLCopter(grids);
-
-                //roflCopter.AttachToWindow(MainWindow);
+                new ROFLCopter(grids);
             }
         }
     }

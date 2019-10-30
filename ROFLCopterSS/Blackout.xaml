@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ROFLCopterSS"
         mc:Ignorable="d"
-        Title="Blackout" Height="450" Width="800"
-        MouseDown="Window_MouseDown"
+        Title="MainWindow" Height="450" Width="800"
+        Background="Transparent" WindowStyle="None" ShowInTaskbar="False" ResizeMode="NoResize"
+        MouseMove="Window_MouseMove"
         KeyDown="Window_KeyDown"
-        Background="Black" WindowStyle="None" ShowInTaskbar="False" ResizeMode="NoResize">
+        Loaded="Window_Loaded"
+        >
     <Grid x:Name="MainGrid">
         
     </Grid>
