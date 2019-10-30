@@ -37,17 +37,7 @@ namespace ROFLCopterSS
         
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            TransformGroup group = new TransformGroup();
-            double width = this.MainGrid.RenderSize.Width;
-            
-            DoubleAnimation animation = new DoubleAnimation((width / 2) * -1, width / 2 + Roflcopter.ActualWidth, new Duration(new TimeSpan(0, 0, 0, 10)));
-            animation.RepeatBehavior = RepeatBehavior.Forever;
-            TranslateTransform tt = new TranslateTransform(-Roflcopter.ActualWidth * 2, 0);
-            Roflcopter.RenderTransform = group;
-            Roflcopter.Width = 300;
-            Roflcopter.Height = 300;
-            group.Children.Add(tt);
-            tt.BeginAnimation(TranslateTransform.XProperty, animation);
+
             WindowState = WindowState.Maximized;
             Mouse.OverrideCursor = Cursors.None;
         }

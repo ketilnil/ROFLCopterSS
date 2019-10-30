@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Forms;
 using Application = System.Windows.Application;
-
+using System.Collections.Generic;
+using System.Windows.Controls;
 
 namespace ROFLCopterSS
 {
@@ -14,6 +15,8 @@ namespace ROFLCopterSS
         {
             if (e.Args.Length == 0 || e.Args[0].ToLower().StartsWith("/s"))
             {
+                var grids = new List<Grid>();
+
                 foreach (Screen s in Screen.AllScreens)
                 {
                     
@@ -26,6 +29,8 @@ namespace ROFLCopterSS
                             Width = s.WorkingArea.Width,
                             Height = s.WorkingArea.Height
                         };
+
+                        grids.Add(window.MainGrid);
                         window.Show();
                     }
                     else
@@ -37,13 +42,16 @@ namespace ROFLCopterSS
                             Width = s.WorkingArea.Width,
                             Height = s.WorkingArea.Height
                         };
+
+                        grids.Add(window.MainGrid);
                         window.Show();
                     }
                 }
 
 
-                var roflCopter = new ROFLCopter();
-                roflCopter.AttachToWindow(MainWindow);
+                var roflCopter = new ROFLCopter(grids);
+
+                //roflCopter.AttachToWindow(MainWindow);
             }
         }
     }

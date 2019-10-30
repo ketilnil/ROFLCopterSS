@@ -9,7 +9,7 @@
         MouseDown="Window_MouseDown"
         KeyDown="Window_KeyDown"
         Background="Black" WindowStyle="None" ShowInTaskbar="False" ResizeMode="NoResize">
-    <Grid>
+    <Grid x:Name="MainGrid">
         
     </Grid>
 </Window>

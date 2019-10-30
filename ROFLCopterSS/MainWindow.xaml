@@ -14,6 +14,6 @@
         gif:ImageBehavior.AnimateInDesignMode="True"
         >
     <Grid x:Name="MainGrid">
-        <Image x:Name="Roflcopter" gif:ImageBehavior.AnimatedSource="roflinvert.gif" Stretch="None"/>
+        <!--<Image x:Name="Roflcopter" gif:ImageBehavior.AnimatedSource="roflinvert.gif" Stretch="None"/>-->
     </Grid>
 </Window>
