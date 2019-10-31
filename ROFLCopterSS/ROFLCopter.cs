@@ -12,13 +12,13 @@ namespace ROFLCopterSS
 {
     class ROFLCopter
     {
-        private readonly Image          _copter;
-        private readonly List<Grid>     _targetGrids;
+        private readonly Image              _copter;
+        private readonly List<Grid>         _targetGrids;
+        private readonly Random             _rnd = new Random();
+        private readonly TranslateTransform _tt;
 
-        private Grid                _activeGrid;
-        private Random              _rnd = new Random();
-        private TranslateTransform  _tt;
-        private TransformGroup      _group;
+        private Grid            _activeGrid;
+        private TransformGroup  _group;
 
 
         public ROFLCopter(List<Grid> targetGrids)
@@ -63,9 +63,6 @@ namespace ROFLCopterSS
             double width = _activeGrid.RenderSize.Width;
 
             var animation = new DoubleAnimation((width / 2) * -1, width / 2 + _copter.ActualWidth, new Duration(new TimeSpan(0, 0, 0, 10)));
-            //animation.RepeatBehavior = RepeatBehavior.Forever;
-
-            //animation.Completed += Animation_Completed;
 
             EventHandler handler = null;
             handler = (sender, args) =>

@@ -19,33 +19,16 @@ namespace ROFLCopterSS
 
                 foreach (Screen s in Screen.AllScreens)
                 {
-                    
-                    if (s != Screen.PrimaryScreen)
+                    var window = new MainWindow
                     {
-                        var window = new MainWindow
-                        {
-                            Left = s.WorkingArea.Left,
-                            Top = s.WorkingArea.Top,
-                            Width = s.WorkingArea.Width,
-                            Height = s.WorkingArea.Height
-                        };
+                        Left = s.WorkingArea.Left,
+                        Top = s.WorkingArea.Top,
+                        Width = s.WorkingArea.Width,
+                        Height = s.WorkingArea.Height
+                    };
 
-                        grids.Add(window.MainGrid);
-                        window.Show();
-                    }
-                    else
-                    {
-                        var window = new MainWindow
-                        {
-                            Left = s.WorkingArea.Left,
-                            Top = s.WorkingArea.Top,
-                            Width = s.WorkingArea.Width,
-                            Height = s.WorkingArea.Height
-                        };
-
-                        grids.Add(window.MainGrid);
-                        window.Show();
-                    }
+                    grids.Add(window.MainGrid);
+                    window.Show();
                 }
 
 
