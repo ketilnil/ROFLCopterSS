@@ -16,7 +16,6 @@ namespace ROFLCopterSS
         private readonly List<Grid>     _targetGrids;
 
         private Grid                _activeGrid;
-        private Random              _rnd = new Random();
         private TranslateTransform  _tt;
         private TransformGroup      _group;
 
@@ -51,8 +50,11 @@ namespace ROFLCopterSS
 
         private void SetActiveGrid()
         {
-            var index = _rnd.Next(2);
+            var index = _targetGrids.IndexOf(_activeGrid);
+            index = (++index == _targetGrids.Count ? 0 : index);
+            
             _activeGrid = _targetGrids[index];
+
             Debug.WriteLine($"Active Grid Index: { index }");
         }
 
