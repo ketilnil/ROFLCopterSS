@@ -106,5 +106,8 @@
   <ItemGroup>
     <Resource Include="roflinvert.gif" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="roflcropped.gif" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
