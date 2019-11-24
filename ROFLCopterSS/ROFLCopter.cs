@@ -16,9 +16,9 @@ namespace ROFLCopterSS
         private readonly List<Grid>          _targetGrids;
         private readonly TranslateTransform  _translateX;
         private readonly TranslateTransform  _translateY;
-        private readonly DoubleAnimation     _animateX;
         private readonly DoubleAnimation     _animateY;
 
+        private DoubleAnimation     _animateX;
         private Grid                _activeGrid;
 
 
@@ -53,23 +53,24 @@ namespace ROFLCopterSS
 
             SetActiveGrid();
             
-            double width = _activeGrid.RenderSize.Width;
-            double height = _activeGrid.RenderSize.Height;
 
             var easing = new SineEase
             {
                 EasingMode = EasingMode.EaseInOut
             };
 
-            _animateX = new DoubleAnimation((width / 2) * -1, width / 2 + _copter.ActualWidth, new Duration(new TimeSpan(0, 0, 0, 10)));
-            _animateX.Completed += AnimationCompletedHandler;
 
+            //double height = _activeGrid.RenderSize.Height;
             _animateY = new DoubleAnimation(_copter.ActualHeight * 2, (_copter.ActualHeight * 2) * -1, new Duration(new TimeSpan(0, 0, 0, 5)))
             {
                 EasingFunction = easing,
                 AutoReverse = true
             };
 
+            double width = _activeGrid.RenderSize.Width;
+            _animateX = new DoubleAnimation((width / 2) * -1, width / 2 + _copter.ActualWidth, new Duration(new TimeSpan(0, 0, 0, 10)));
+
+            _animateX.Completed += AnimationCompletedHandler;
 
             Play();
         }
@@ -78,6 +79,10 @@ namespace ROFLCopterSS
         public void Play()
         {
             _activeGrid.Children.Add(_copter);
+
+            double width = _activeGrid.RenderSize.Width;
+            _animateX.From = (width / 2) * -1;
+            _animateX.To   = width / 2 + _copter.ActualWidth;
 
             _translateY.BeginAnimation(TranslateTransform.YProperty, _animateY);
             _translateX.BeginAnimation(TranslateTransform.XProperty, _animateX);
