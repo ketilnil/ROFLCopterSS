@@ -16,9 +16,9 @@ namespace ROFLCopterSS
         private readonly List<Grid>          _targetGrids;
         private readonly TranslateTransform  _translateX;
         private readonly TranslateTransform  _translateY;
+        private readonly DoubleAnimation     _animateX;
         private readonly DoubleAnimation     _animateY;
 
-        private DoubleAnimation     _animateX;
         private Grid                _activeGrid;
 
 
