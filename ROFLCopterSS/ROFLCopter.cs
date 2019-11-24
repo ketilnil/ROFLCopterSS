@@ -12,11 +12,12 @@ namespace ROFLCopterSS
 {
     class ROFLCopter
     {
-        private readonly Image          _copter;
-        private readonly List<Grid>     _targetGrids;
+        private readonly Image               _copter;
+        private readonly List<Grid>          _targetGrids;
+        private readonly TranslateTransform  _translateX;
+        private readonly TranslateTransform  _translateY;
 
         private Grid                _activeGrid;
-        private TranslateTransform  _translateX;
 
 
         public ROFLCopter(List<Grid> targetGrids)
@@ -35,6 +36,8 @@ namespace ROFLCopterSS
 
             var rotate = new RotateTransform(10);
             _translateX = new TranslateTransform(_copter.ActualWidth * 2, 0);
+            _translateY = new TranslateTransform(0, _copter.ActualHeight * 2);
+
 
             var group = new TransformGroup();
             _copter.RenderTransform = group;
@@ -43,6 +46,7 @@ namespace ROFLCopterSS
 
             group.Children.Add(rotate);
             group.Children.Add(_translateX);
+            group.Children.Add(_translateY);
 
             SetActiveGrid();
             Play();
@@ -63,25 +67,35 @@ namespace ROFLCopterSS
         public void Play()
         {
             _activeGrid.Children.Add(_copter);
-            double width = _activeGrid.RenderSize.Width;
+            double width  = _activeGrid.RenderSize.Width;
+            double height = _activeGrid.RenderSize.Height;
 
-            var animation = new DoubleAnimation((width / 2) * -1, width / 2 + _copter.ActualWidth, new Duration(new TimeSpan(0, 0, 0, 10)));
-            //animation.RepeatBehavior = RepeatBehavior.Forever;
+            var animateX = new DoubleAnimation((width / 2) * -1, width / 2 + _copter.ActualWidth, new Duration(new TimeSpan(0, 0, 0, 10)));
 
-            //animation.Completed += Animation_Completed;
+            //var animateY = new DoubleAnimation(height / 2 / 2, (height / 2 / 2) * -1, new Duration(new TimeSpan(0, 0, 0, 5)));
+            var animateY = new DoubleAnimation(_copter.ActualHeight * 2, (_copter.ActualHeight * 2) * -1, new Duration(new TimeSpan(0, 0, 0, 5)));
+
+            var easing = new SineEase
+            {
+                EasingMode = EasingMode.EaseInOut
+            };
+
+            animateY.EasingFunction = easing;
+            animateY.AutoReverse = true;
 
             EventHandler handler = null;
             handler = (sender, args) =>
             {
-                animation.Completed -= handler;
+                animateX.Completed -= handler;
                 _activeGrid.Children.Remove(_copter);
                 SetActiveGrid();
                 Play();
             };
 
-            animation.Completed += handler;
+            animateX.Completed += handler;
 
-            _translateX.BeginAnimation(TranslateTransform.XProperty, animation);
+            _translateY.BeginAnimation(TranslateTransform.YProperty, animateY);
+            _translateX.BeginAnimation(TranslateTransform.XProperty, animateX);
         }
     }
 }
