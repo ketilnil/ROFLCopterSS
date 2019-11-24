@@ -16,8 +16,7 @@ namespace ROFLCopterSS
         private readonly List<Grid>     _targetGrids;
 
         private Grid                _activeGrid;
-        private TranslateTransform  _tt;
-        private TransformGroup      _group;
+        private TranslateTransform  _translateX;
 
 
         public ROFLCopter(List<Grid> targetGrids)
@@ -34,14 +33,16 @@ namespace ROFLCopterSS
 
             ImageBehavior.SetAnimatedSource(_copter, gif);
 
-            _tt = new TranslateTransform(_copter.ActualWidth * 2, 0);
+            var rotate = new RotateTransform(10);
+            _translateX = new TranslateTransform(_copter.ActualWidth * 2, 0);
 
-            _group = new TransformGroup();
-            _copter.RenderTransform = _group;
+            var group = new TransformGroup();
+            _copter.RenderTransform = group;
             _copter.Width = 300;
             _copter.Height = 300;
 
-            _group.Children.Add(_tt);
+            group.Children.Add(rotate);
+            group.Children.Add(_translateX);
 
             SetActiveGrid();
             Play();
@@ -80,7 +81,7 @@ namespace ROFLCopterSS
 
             animation.Completed += handler;
 
-            _tt.BeginAnimation(TranslateTransform.XProperty, animation);
+            _translateX.BeginAnimation(TranslateTransform.XProperty, animation);
         }
     }
 }
