@@ -61,6 +61,8 @@ namespace ROFLCopterSS
 
 
             //double height = _activeGrid.RenderSize.Height;
+            Debug.WriteLine($"Copter height: { _copter.ActualHeight }");
+            Debug.WriteLine($"Copter width: { _copter.ActualWidth }");
             _animateY = new DoubleAnimation(_copter.ActualHeight * 2, (_copter.ActualHeight * 2) * -1, new Duration(new TimeSpan(0, 0, 0, 5)))
             {
                 EasingFunction = easing,
@@ -80,9 +82,19 @@ namespace ROFLCopterSS
         {
             _activeGrid.Children.Add(_copter);
 
+            Debug.WriteLine($"Copter height: { _copter.ActualHeight }");
+            Debug.WriteLine($"Copter width: { _copter.ActualWidth }");
+
             double width = _activeGrid.RenderSize.Width;
             _animateX.From = (width / 2) * -1;
             _animateX.To   = width / 2 + _copter.ActualWidth;
+
+            //_animateY.From = _copter.ActualHeight * 2;
+            //_animateY.To   = (_copter.ActualHeight * 2) * -1;
+            
+            // HACK: Finn ut hvordan hente riktig height verdi
+            _animateY.From = 115 * 2;
+            _animateY.To = (115 * 2) * -1;
 
             _translateY.BeginAnimation(TranslateTransform.YProperty, _animateY);
             _translateX.BeginAnimation(TranslateTransform.XProperty, _animateX);
