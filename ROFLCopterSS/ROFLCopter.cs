@@ -65,12 +65,17 @@ namespace ROFLCopterSS
                 EasingMode = EasingMode.EaseInOut
             };
 
-            _animatePitch = new DoubleAnimation(0, 10, new Duration(new TimeSpan(0, 0, 2)))
+            var easingPitch = new QuadraticEase
             {
-                EasingFunction = easing,
+                EasingMode = EasingMode.EaseOut
+            };
+
+            _animatePitch = new DoubleAnimation(0, 10, new Duration(new TimeSpan(0, 0, 5)))
+            {
+                EasingFunction = easingPitch,
                 AutoReverse = true
             };
-            //_animatePitch.RepeatBehavior = RepeatBehavior.Forever;
+
 
             //double height = _activeGrid.RenderSize.Height;
             Debug.WriteLine($"Copter height: { _copter.ActualHeight }");
