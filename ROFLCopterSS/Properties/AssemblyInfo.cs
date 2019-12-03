@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("ROFLCopterSS")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("EVRY")]
+[assembly: AssemblyCompany("LNS")]
 [assembly: AssemblyProduct("ROFLCopterSS")]
-[assembly: AssemblyCopyright("Copyright © EVRY 2019")]
+[assembly: AssemblyCopyright("Copyright © LNS 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
