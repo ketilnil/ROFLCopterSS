@@ -16,10 +16,14 @@ namespace ROFLCopterSS
         private readonly List<Grid>          _targetGrids;
         private readonly TranslateTransform  _translateX;
         private readonly TranslateTransform  _translateY;
+        private readonly RotateTransform     _translatePitch;
         private readonly DoubleAnimation     _animateX;
         private readonly DoubleAnimation     _animateY;
+        private readonly DoubleAnimation     _animatePitch;
+
 
         private Grid                _activeGrid;
+        
 
 
         public ROFLCopter(List<Grid> targetGrids)
@@ -36,7 +40,8 @@ namespace ROFLCopterSS
 
             ImageBehavior.SetAnimatedSource(_copter, gif);
 
-            var rotate = new RotateTransform(10);
+            //var rotate = new RotateTransform(10);
+            _translatePitch = new RotateTransform(10);
             _translateX = new TranslateTransform(_copter.ActualWidth * 2, 0);
             _translateY = new TranslateTransform(0, _copter.ActualHeight * 2);
 
@@ -46,17 +51,29 @@ namespace ROFLCopterSS
             _copter.Width = 300;
             _copter.Height = 300;
 
-            group.Children.Add(rotate);
+            group.Children.Add(_translatePitch);
             group.Children.Add(_translateX);
             group.Children.Add(_translateY);
 
 
             SetActiveGrid();
-            
+
+
 
             var easing = new SineEase
             {
                 EasingMode = EasingMode.EaseInOut
+            };
+
+            var easingPitch = new QuadraticEase
+            {
+                EasingMode = EasingMode.EaseOut
+            };
+
+            _animatePitch = new DoubleAnimation(0, 10, new Duration(new TimeSpan(0, 0, 5)))
+            {
+                EasingFunction = easingPitch,
+                AutoReverse = true
             };
 
 
@@ -96,6 +113,7 @@ namespace ROFLCopterSS
             _animateY.From = 115 * 2;
             _animateY.To = (115 * 2) * -1;
 
+            _translatePitch.BeginAnimation(RotateTransform.AngleProperty, _animatePitch);
             _translateY.BeginAnimation(TranslateTransform.YProperty, _animateY);
             _translateX.BeginAnimation(TranslateTransform.XProperty, _animateX);
         }
@@ -121,18 +139,9 @@ namespace ROFLCopterSS
 
         private void AnimationCompletedHandler(object sender, EventArgs args)
         {
-            //if (sender is DoubleAnimation animation)
-            //{
-                //animation.Completed -= AnimationCompletedHandler;
-                _activeGrid.Children.Remove(_copter);
-                SetActiveGrid();
-                Play();
-
-            //}
-            //else
-            //{
-            //    throw new InvalidCastException($"Excpected another type: { sender.GetType().ToString() }");
-            //}
+            _activeGrid.Children.Remove(_copter);
+            SetActiveGrid();
+            Play();
         }
     }
 }
