@@ -34,6 +34,10 @@ namespace ROFLCopterSS
 
                 new ROFLCopter(grids);
             }
+            else
+            {
+                Application.Current.Shutdown();
+            }
         }
     }
 }
