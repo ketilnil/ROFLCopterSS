@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,14 +20,117 @@ namespace ROFLCopterSS
     /// </summary>
     public partial class SettingsWindow : Window
     {
+        const string REG_KEY        = @"Software\LNS\ROFLCopterSS";
+        const string REG_SPEED      = "Speed";
+        const string REG_MISSILE    = "Missile";
+
+
         public SettingsWindow()
         {
             InitializeComponent();
+
+            var speed = GetSpeedValue();
+            SetRadioButton(speed);
+
+            var missile = GetMissileValue();
+            SetMissileCheckBox(missile);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void SetMissileCheckBox(string missile)
+        {
+            
+        }
+
+        private void Button_Click_Cancel(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
+
+
+        private void Button_Click_OK(object sender, RoutedEventArgs e)
+        {
+            SaveSpeedValue(GetSpeedValue());
+            SaveMissileValue(GetMissileValue());
+            this.Close();
+        }
+
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            var val = ((CheckBox)sender).IsChecked;
+            MessageBox.Show($"IsChecked={ val }");
+        }
+
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var val = ((RadioButton)sender).IsChecked;
+            var cont = ((RadioButton)sender).Content;
+            MessageBox.Show($"IsChecked={ val } Content={ cont }");
+        }
+
+
+        private void SaveSpeedValue(string speed)
+        {
+            Registry.CurrentUser.SetValue(REG_SPEED, speed, RegistryValueKind.String);
+        }
+
+
+        private string GetSpeedValue()
+        {
+            using (var key = Registry.CurrentUser.OpenSubKey(REG_KEY, true))
+            {
+                if (key == null) return "medium";
+
+                return key.GetValue(REG_SPEED, null) as string;
+            }
+        }
+
+
+        private void SetRadioButton(string speed)
+        {
+            switch (speed)
+            {
+                case "slow":
+                    {
+                        SpeedSlow.IsChecked = true;
+                        break;
+                    }
+                case "medium":
+                    {
+                        SpeedMedium.IsChecked = true;
+                        break;
+                    }
+                case "fast":
+                    {
+                        SpeedFast.IsChecked = true;
+                        break;
+                    }
+                default:
+                    {
+                        SpeedMedium.IsChecked = true;
+                        break;
+                    }
+            }
+        }
+
+
+        private string GetMissileValue()
+        {
+            using (var key = Registry.CurrentUser.OpenSubKey(REG_KEY, true))
+            {
+                if (key == null) return "medium";
+
+                return key.GetValue(REG_MISSILE, null) as string;
+            }
+        }
+
+
+        private void SaveMissileValue(string missile)
+        {
+            Registry.CurrentUser.SetValue(REG_MISSILE, missile.ToString(), RegistryValueKind.String);
+        }
+
+
     }
 }
