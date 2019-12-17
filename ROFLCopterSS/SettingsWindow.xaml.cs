@@ -29,17 +29,15 @@ namespace ROFLCopterSS
         {
             InitializeComponent();
 
-            var speed = GetSpeedValue();
+            var speed = GetSpeedRegValue();
             SetRadioButton(speed);
 
-            var missile = GetMissileValue();
-            SetMissileCheckBox(missile);
+            if (bool.TryParse(GetMissileRegValue(), out bool missile))
+                Missile.IsChecked = missile;
+            else
+                Missile.IsChecked = false;
         }
 
-        private void SetMissileCheckBox(string missile)
-        {
-            
-        }
 
         private void Button_Click_Cancel(object sender, RoutedEventArgs e)
         {
@@ -49,8 +47,8 @@ namespace ROFLCopterSS
 
         private void Button_Click_OK(object sender, RoutedEventArgs e)
         {
-            SaveSpeedValue(GetSpeedValue());
-            SaveMissileValue(GetMissileValue());
+            SaveSpeedRegValue(GetRadioButtonValue());
+            SaveMissileRegValue((bool)Missile.IsChecked);
             this.Close();
         }
 
@@ -58,7 +56,7 @@ namespace ROFLCopterSS
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
             var val = ((CheckBox)sender).IsChecked;
-            MessageBox.Show($"IsChecked={ val }");
+            //MessageBox.Show($"IsChecked={ val }");
         }
 
 
@@ -66,24 +64,17 @@ namespace ROFLCopterSS
         {
             var val = ((RadioButton)sender).IsChecked;
             var cont = ((RadioButton)sender).Content;
-            MessageBox.Show($"IsChecked={ val } Content={ cont }");
+            //MessageBox.Show($"IsChecked={ val } Content={ cont }");
         }
 
 
-        private void SaveSpeedValue(string speed)
+        private string GetRadioButtonValue()
         {
-            Registry.CurrentUser.SetValue(REG_SPEED, speed, RegistryValueKind.String);
-        }
+            if ((bool)SpeedSlow.IsChecked) return "slow";
+            if ((bool)SpeedMedium.IsChecked) return "medium";
+            if ((bool)SpeedFast.IsChecked) return "fast";
 
-
-        private string GetSpeedValue()
-        {
-            using (var key = Registry.CurrentUser.OpenSubKey(REG_KEY, true))
-            {
-                if (key == null) return "medium";
-
-                return key.GetValue(REG_SPEED, null) as string;
-            }
+            return "medium";
         }
 
 
@@ -115,7 +106,38 @@ namespace ROFLCopterSS
         }
 
 
-        private string GetMissileValue()
+        private string GetSpeedRegValue()
+        {
+            using (var key = Registry.CurrentUser.OpenSubKey(REG_KEY, true))
+            {
+                if (key == null) return "medium";
+
+                return key.GetValue(REG_SPEED, null) as string;
+            }
+        }
+
+
+        private void SaveSpeedRegValue(string speed)
+        {
+            using (var key = Registry.CurrentUser.OpenSubKey(REG_KEY, true))
+            {
+                if (key == null)
+                {
+                    using (var newkey = Registry.CurrentUser.CreateSubKey(REG_KEY))
+                    {
+                        newkey.SetValue(REG_SPEED, speed);
+                    }
+                }
+                else
+                {
+                    key.SetValue(REG_SPEED, speed);
+                }
+            }
+            //Registry.CurrentUser.SetValue(REG_SPEED, speed, RegistryValueKind.String);
+        }
+
+
+        private string GetMissileRegValue()
         {
             using (var key = Registry.CurrentUser.OpenSubKey(REG_KEY, true))
             {
@@ -126,11 +148,15 @@ namespace ROFLCopterSS
         }
 
 
-        private void SaveMissileValue(string missile)
+        private void SaveMissileRegValue(bool missile)
         {
-            Registry.CurrentUser.SetValue(REG_MISSILE, missile.ToString(), RegistryValueKind.String);
+            using (var key = Registry.CurrentUser.OpenSubKey(REG_KEY, true))
+            {
+                if (key == null) return;
+
+                key.SetValue(REG_MISSILE, missile.ToString());
+            }
+            //Registry.CurrentUser.SetValue(REG_MISSILE, missile.ToString(), RegistryValueKind.String);
         }
-
-
     }
 }
