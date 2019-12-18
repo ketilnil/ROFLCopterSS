@@ -113,6 +113,8 @@ namespace ROFLCopterSS
             _animateY.From = 115 * 2;
             _animateY.To = (115 * 2) * -1;
 
+            SetSpeedFromSettings(_animateX, _animateY, _animatePitch);
+
             _translatePitch.BeginAnimation(RotateTransform.AngleProperty, _animatePitch);
             _translateY.BeginAnimation(TranslateTransform.YProperty, _animateY);
             _translateX.BeginAnimation(TranslateTransform.XProperty, _animateX);
@@ -123,6 +125,33 @@ namespace ROFLCopterSS
         {
             _translateY.BeginAnimation(TranslateTransform.YProperty, null);
             _translateX.BeginAnimation(TranslateTransform.XProperty, null);
+        }
+
+
+        private void SetSpeedFromSettings(DoubleAnimation x, DoubleAnimation y, DoubleAnimation pitch)
+        {
+            int seconds;
+
+            switch (App.Settings.Speed)
+            {
+                case "slow":
+                    seconds = 10;
+                    break;
+                case "medium":
+                    seconds = 8;
+                    break;
+                case "fast":
+                    seconds = 6;
+                    break;
+                default:
+                    seconds = 8;
+                    break;
+            }
+
+
+            x.Duration = new Duration(new TimeSpan(0, 0, 0, seconds));
+            y.Duration = new Duration(new TimeSpan(0, 0, 0, seconds / 2));
+            pitch.Duration = new Duration(new TimeSpan(0, 0, 0, seconds / 2));
         }
 
 

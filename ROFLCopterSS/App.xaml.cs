@@ -13,6 +13,9 @@ namespace ROFLCopterSS
     {
         private ROFLCopter _copter;
 
+
+        static public Settings Settings = new Settings();
+
         protected override void OnExit(ExitEventArgs e)
         {
             _copter?.Cancel();

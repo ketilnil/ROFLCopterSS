@@ -20,22 +20,12 @@ namespace ROFLCopterSS
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        const string REG_KEY        = @"Software\LNS\ROFLCopterSS";
-        const string REG_SPEED      = "Speed";
-        const string REG_MISSILE    = "Missile";
-
-
         public SettingsWindow()
         {
             InitializeComponent();
 
-            var speed = GetSpeedRegValue();
-            SetRadioButton(speed);
-
-            if (bool.TryParse(GetMissileRegValue(), out bool missile))
-                Missile.IsChecked = missile;
-            else
-                Missile.IsChecked = false;
+            SetRadioButtonValue(App.Settings.Speed);
+            Missile.IsChecked = App.Settings.Missile;
         }
 
 
@@ -47,23 +37,23 @@ namespace ROFLCopterSS
 
         private void Button_Click_OK(object sender, RoutedEventArgs e)
         {
-            SaveSpeedRegValue(GetRadioButtonValue());
-            SaveMissileRegValue((bool)Missile.IsChecked);
+            App.Settings.Speed = GetRadioButtonValue();
+            App.Settings.Missile = (bool)Missile.IsChecked;
             this.Close();
         }
 
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            var val = ((CheckBox)sender).IsChecked;
+            //var val = ((CheckBox)sender).IsChecked;
             //MessageBox.Show($"IsChecked={ val }");
         }
 
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            var val = ((RadioButton)sender).IsChecked;
-            var cont = ((RadioButton)sender).Content;
+            //var val = ((RadioButton)sender).IsChecked;
+            //var cont = ((RadioButton)sender).Content;
             //MessageBox.Show($"IsChecked={ val } Content={ cont }");
         }
 
@@ -78,7 +68,7 @@ namespace ROFLCopterSS
         }
 
 
-        private void SetRadioButton(string speed)
+        private void SetRadioButtonValue(string speed)
         {
             switch (speed)
             {
@@ -103,60 +93,6 @@ namespace ROFLCopterSS
                         break;
                     }
             }
-        }
-
-
-        private string GetSpeedRegValue()
-        {
-            using (var key = Registry.CurrentUser.OpenSubKey(REG_KEY, true))
-            {
-                if (key == null) return "medium";
-
-                return key.GetValue(REG_SPEED, null) as string;
-            }
-        }
-
-
-        private void SaveSpeedRegValue(string speed)
-        {
-            using (var key = Registry.CurrentUser.OpenSubKey(REG_KEY, true))
-            {
-                if (key == null)
-                {
-                    using (var newkey = Registry.CurrentUser.CreateSubKey(REG_KEY))
-                    {
-                        newkey.SetValue(REG_SPEED, speed);
-                    }
-                }
-                else
-                {
-                    key.SetValue(REG_SPEED, speed);
-                }
-            }
-            //Registry.CurrentUser.SetValue(REG_SPEED, speed, RegistryValueKind.String);
-        }
-
-
-        private string GetMissileRegValue()
-        {
-            using (var key = Registry.CurrentUser.OpenSubKey(REG_KEY, true))
-            {
-                if (key == null) return "medium";
-
-                return key.GetValue(REG_MISSILE, null) as string;
-            }
-        }
-
-
-        private void SaveMissileRegValue(bool missile)
-        {
-            using (var key = Registry.CurrentUser.OpenSubKey(REG_KEY, true))
-            {
-                if (key == null) return;
-
-                key.SetValue(REG_MISSILE, missile.ToString());
-            }
-            //Registry.CurrentUser.SetValue(REG_MISSILE, missile.ToString(), RegistryValueKind.String);
         }
     }
 }
