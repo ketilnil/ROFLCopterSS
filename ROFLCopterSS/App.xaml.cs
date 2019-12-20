@@ -13,9 +13,12 @@ namespace ROFLCopterSS
     {
         private ROFLCopter _copter;
 
+
+        static public Settings Settings = new Settings();
+
         protected override void OnExit(ExitEventArgs e)
         {
-            _copter.Cancel();
+            _copter?.Cancel();
             base.OnExit(e);
         }
 
@@ -41,6 +44,10 @@ namespace ROFLCopterSS
 
 
                 _copter = new ROFLCopter(grids);
+            }
+            else if (e.Args[0].ToLower().StartsWith("/c"))
+            {
+                (new SettingsWindow()).Show();
             }
             else
             {
