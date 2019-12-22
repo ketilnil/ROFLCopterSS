@@ -23,6 +23,8 @@ namespace ROFLCopterSS
 
 
         private Grid                _activeGrid;
+
+        private Missile             _missile;
         
 
 
@@ -118,6 +120,12 @@ namespace ROFLCopterSS
             _translatePitch.BeginAnimation(RotateTransform.AngleProperty, _animatePitch);
             _translateY.BeginAnimation(TranslateTransform.YProperty, _animateY);
             _translateX.BeginAnimation(TranslateTransform.XProperty, _animateX);
+
+            if (App.Settings.Missile)
+            {
+                // Randomly delayed launch
+                _translateX.X
+            }
         }
 
 
@@ -125,6 +133,8 @@ namespace ROFLCopterSS
         {
             _translateY.BeginAnimation(TranslateTransform.YProperty, null);
             _translateX.BeginAnimation(TranslateTransform.XProperty, null);
+
+            _missile?.Cancel();
         }
 
 
