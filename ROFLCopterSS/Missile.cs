@@ -24,8 +24,7 @@ namespace ROFLCopterSS
 
         private readonly TextBlock          _missile;
 
-        private readonly TranslateTransform  _translateX;
-        private readonly TranslateTransform  _translateY;
+        private readonly TranslateTransform  _translateXY;
         private readonly RotateTransform     _translatePitch;
         private DoubleAnimation     _animateX;
         private DoubleAnimation     _animateY;
@@ -59,23 +58,22 @@ namespace ROFLCopterSS
 
                 _animateX.Completed += AnimationCompletedHandler;
 
-                _translateX.BeginAnimation(TranslateTransform.XProperty, _animateX);
+                _translateXY.BeginAnimation(TranslateTransform.XProperty, _animateX);
                 //_translateY.BeginAnimation(TranslateTransform.YProperty, _animateY);
 
                 _timer = new Timer(Debugger, copterTransform, 0, 1000);
             };
 
-            _translateX = new TranslateTransform(x, y + 100);
-            //_translateY = new TranslateTransform(x, y + 100);
+            _translateXY = new TranslateTransform(x, y + 100);
 
             var group = new TransformGroup();
             _missile.RenderTransform = group;
+            //_missile.RenderTransform = _translateX;
 
             //group.Children.Add(_translatePitch);
-            group.Children.Add(_translateX);
-           // group.Children.Add(_translateY);
+            group.Children.Add(_translateXY);
 
-            //_missile.RenderTransform = _translateX;
+
 
             _activeGrid = grid;
             _activeGrid.Children.Add(_missile);
@@ -103,8 +101,8 @@ namespace ROFLCopterSS
 
         public void Cancel()
         {
-            //_translateY.BeginAnimation(TranslateTransform.YProperty, null);
-            _translateX.BeginAnimation(TranslateTransform.XProperty, null);
+            _translateXY.BeginAnimation(TranslateTransform.YProperty, null);
+            _translateXY.BeginAnimation(TranslateTransform.XProperty, null);
             _activeGrid.Children.Remove(_missile);
 
             _timer?.Dispose();

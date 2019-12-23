@@ -15,8 +15,7 @@ namespace ROFLCopterSS
     {
         private readonly Image               _copter;
         private readonly List<Grid>          _targetGrids;
-        private readonly TranslateTransform  _translateX;
-        private readonly TranslateTransform  _translateY;
+        private readonly TranslateTransform  _translateXY;
         private readonly RotateTransform     _translatePitch;
         private readonly DoubleAnimation     _animateX;
         private readonly DoubleAnimation     _animateY;
@@ -45,9 +44,7 @@ namespace ROFLCopterSS
 
             //var rotate = new RotateTransform(10);
             _translatePitch = new RotateTransform(10);
-            _translateX = new TranslateTransform(_copter.ActualWidth * 2, 0);
-            _translateY = new TranslateTransform(0, _copter.ActualHeight * 2);
-
+            _translateXY = new TranslateTransform(_copter.ActualWidth * 2, _copter.ActualHeight * 2);
 
             var group = new TransformGroup();
             _copter.RenderTransform = group;
@@ -55,9 +52,7 @@ namespace ROFLCopterSS
             _copter.Height = 300;
 
             group.Children.Add(_translatePitch);
-            group.Children.Add(_translateX);
-            group.Children.Add(_translateY);
-
+            group.Children.Add(_translateXY);
 
             SetActiveGrid();
 
@@ -121,8 +116,8 @@ namespace ROFLCopterSS
             SetSpeedFromSettings(_animateX, _animateY, _animatePitch);
 
             _translatePitch.BeginAnimation(RotateTransform.AngleProperty, _animatePitch);
-            _translateY.BeginAnimation(TranslateTransform.YProperty, _animateY);
-            _translateX.BeginAnimation(TranslateTransform.XProperty, _animateX);
+            _translateXY.BeginAnimation(TranslateTransform.YProperty, _animateY);
+            _translateXY.BeginAnimation(TranslateTransform.XProperty, _animateX);
 
             if (App.Settings.Missile)
             {
@@ -134,7 +129,7 @@ namespace ROFLCopterSS
                         var point = _copter.TransformToAncestor(_activeGrid).Transform(new Point(0,0));
                         Debug.WriteLine($"Copter X: { point.X }  Y: { point.Y }");
 
-                        _missile = new Missile(point.X, point.Y, _animateX.Duration, _activeGrid, _translateX);
+                        _missile = new Missile(point.X, point.Y, _animateX.Duration, _activeGrid, _translateXY);
                     });
                 });
             }
@@ -143,8 +138,8 @@ namespace ROFLCopterSS
 
         public void Cancel()
         {
-            _translateY.BeginAnimation(TranslateTransform.YProperty, null);
-            _translateX.BeginAnimation(TranslateTransform.XProperty, null);
+            _translateXY.BeginAnimation(TranslateTransform.YProperty, null);
+            _translateXY.BeginAnimation(TranslateTransform.XProperty, null);
 
             _missile?.Cancel();
         }
