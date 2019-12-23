@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -93,6 +94,8 @@ namespace ROFLCopterSS
 
             _animateX.Completed += AnimationCompletedHandler;
 
+
+            //TODO: _copter.Loaded += (s, a) =>
             Play();
         }
 
@@ -124,7 +127,16 @@ namespace ROFLCopterSS
             if (App.Settings.Missile)
             {
                 // Randomly delayed launch
-                _translateX.X
+                Task.Delay(2000).ContinueWith((t) =>
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        var point = _copter.TransformToAncestor(_activeGrid).Transform(new Point(0,0));
+                        Debug.WriteLine($"Copter X: { point.X }  Y: { point.Y }");
+
+                        _missile = new Missile(point.X, point.Y, _animateX.Duration, _activeGrid, _translateX);
+                    });
+                });
             }
         }
 
@@ -178,6 +190,7 @@ namespace ROFLCopterSS
 
         private void AnimationCompletedHandler(object sender, EventArgs args)
         {
+            _missile?.Cancel();
             _activeGrid.Children.Remove(_copter);
             SetActiveGrid();
             Play();
