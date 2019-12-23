@@ -30,6 +30,15 @@ namespace ROFLCopterSS
 
                 foreach (Screen s in Screen.AllScreens)
                 {
+
+
+#if DEBUG  
+                    // Test on one screen, leave VS visible for debug output
+                    if (s.Primary)
+                        continue;
+#endif
+
+
                     var window = new MainWindow
                     {
                         Left = s.WorkingArea.Left,
