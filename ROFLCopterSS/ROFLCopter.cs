@@ -126,7 +126,7 @@ namespace ROFLCopterSS
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        var point = _copter.TransformToAncestor(_activeGrid).Transform(new Point(0,0));
+                        var point = _copter.TransformToAncestor((Window)_activeGrid.Parent).Transform(new Point(0,0));
                         Debug.WriteLine($"Copter X: { point.X }  Y: { point.Y }");
 
                         _missile = new Missile(point.X, point.Y, _animateX.Duration, _activeGrid, _translateXY);

@@ -43,28 +43,50 @@ namespace ROFLCopterSS
             {
                 Text = asciiMissile,
                 Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
-                FontFamily = new FontFamily("Courier New")
+                FontFamily = new FontFamily("Courier New"),
+                //Background = new SolidColorBrush(Color.FromRgb(40,40,40)),
+                Width = 180,
+                Height = 70
 
             };
+
+
+            var easingX = new ExponentialEase
+            {
+                EasingMode = EasingMode.EaseInOut,
+                Exponent = 3
+            };
+
+            var easingY = new SineEase
+            {
+                EasingMode = EasingMode.EaseInOut,
+            };
+
 
             _missile.Loaded += (s, a) =>
             {
                 var missileTimeSpan = new TimeSpan(0,0, duration.TimeSpan.Seconds / 2);
                 double width = grid.RenderSize.Width;
                 //_animateX = new DoubleAnimation((width / 2) * -1, (width / 2) + _missile.ActualWidth, new Duration(missileTimeSpan));
-                _animateX = new DoubleAnimation(x, (width / 2) + _missile.ActualWidth, new Duration(missileTimeSpan));
+                _animateX = new DoubleAnimation(copterTransform.X, width * 2, new Duration(missileTimeSpan))
+                {
+                    EasingFunction = easingX
+                };
 
-                _animateY = new DoubleAnimation(y + 100, y + 200, new Duration(new TimeSpan(0,0,2)));
+                _animateY = new DoubleAnimation(copterTransform.Y + 100, copterTransform.Y + 200, new Duration(new TimeSpan(0, 0, 1)))
+                {
+                    EasingFunction = easingY
+                };
 
                 _animateX.Completed += AnimationCompletedHandler;
 
                 _translateXY.BeginAnimation(TranslateTransform.XProperty, _animateX);
-                //_translateY.BeginAnimation(TranslateTransform.YProperty, _animateY);
+                _translateXY.BeginAnimation(TranslateTransform.YProperty, _animateY);
 
                 _timer = new Timer(Debugger, copterTransform, 0, 1000);
             };
 
-            _translateXY = new TranslateTransform(x, y + 100);
+            _translateXY = new TranslateTransform(copterTransform.X, copterTransform.Y);
 
             var group = new TransformGroup();
             _missile.RenderTransform = group;
@@ -113,6 +135,7 @@ namespace ROFLCopterSS
 
         private void AnimationCompletedHandler(object sender, EventArgs args)
         {
+            Debug.WriteLine("Ferdig med missile");
             this.Cancel();
             //if (_missile.Parent is Grid grid)
             //{
