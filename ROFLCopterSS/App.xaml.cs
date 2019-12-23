@@ -47,7 +47,7 @@ namespace ROFLCopterSS
             }
             else if (e.Args[0].ToLower().StartsWith("/c"))
             {
-                (new SettingsWindow()).Show();
+                (new SettingsWindow()).ShowDialog();
             }
             else
             {
