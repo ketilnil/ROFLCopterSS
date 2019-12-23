@@ -25,6 +25,8 @@ namespace ROFLCopterSS
         private Grid                _activeGrid;
 
         private Missile             _missile;
+
+        private readonly Random _random = new Random(DateTime.Now.Second);
         
 
 
@@ -121,17 +123,23 @@ namespace ROFLCopterSS
 
             if (App.Settings.Missile)
             {
-                // Randomly delayed launch
-                Task.Delay(2000).ContinueWith((t) =>
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        var point = _copter.TransformToAncestor((Window)_activeGrid.Parent).Transform(new Point(0,0));
-                        Debug.WriteLine($"Copter X: { point.X }  Y: { point.Y }");
+                var fire = (_random.Next(1,100) % 2) == 0;
 
-                        _missile = new Missile(point.X, point.Y, _animateX.Duration, _activeGrid, _translateXY);
+                if (fire)
+                {
+                    var delay = _random.Next(0, (_animateX.Duration.TimeSpan.Seconds / 2) * 1000);
+                    // Randomly delayed launch
+                    Task.Delay(delay).ContinueWith((t) =>
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            var point = _copter.TransformToAncestor((Window)_activeGrid.Parent).Transform(new Point(0,0));
+                            Debug.WriteLine($"Copter X: { point.X }  Y: { point.Y }");
+
+                            _missile = new Missile(_translateXY, _animateX.Duration, _activeGrid);
+                        });
                     });
-                });
+                }
             }
         }
 

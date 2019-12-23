@@ -16,9 +16,9 @@ namespace ROFLCopterSS
     {
 
         const string asciiMissile = @"
-\\\        \\  
-=|||OLOLOLOLOLO>>
-///        //
+      \\        \  
+´.',==|||TROLLOLOLOL>>
+      //        /
 ";
 
 
@@ -36,7 +36,7 @@ namespace ROFLCopterSS
         private Timer _timer;
 
 
-        public Missile(double x, double y, Duration duration, Grid grid, TranslateTransform copterTransform)
+        public Missile(TranslateTransform copterTransform, Duration duration, Grid grid)
         {
 
             _missile = new TextBlock()
