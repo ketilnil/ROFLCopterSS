@@ -28,7 +28,7 @@ namespace ROFLCopterSS
         private readonly RotateTransform     _translatePitch;
         private DoubleAnimation     _animateX;
         private DoubleAnimation     _animateY;
-        private readonly DoubleAnimation     _animatePitch;
+        private DoubleAnimation     _animatePitch;
         private readonly Grid                _activeGrid;
 
 
@@ -62,6 +62,11 @@ namespace ROFLCopterSS
                 EasingMode = EasingMode.EaseInOut,
             };
 
+            var easingPitch = new QuadraticEase
+            {
+                EasingMode = EasingMode.EaseOut
+            };
+
 
             _missile.Loaded += (s, a) =>
             {
@@ -78,21 +83,29 @@ namespace ROFLCopterSS
                     EasingFunction = easingY
                 };
 
+                _animatePitch = new DoubleAnimation(0, -5, new Duration(new TimeSpan(0, 0, 1)))
+                {
+                    EasingFunction = easingPitch,
+                    AutoReverse = true
+                };
+
                 _animateX.Completed += AnimationCompletedHandler;
 
+                _translatePitch.BeginAnimation(RotateTransform.AngleProperty, _animatePitch);
                 _translateXY.BeginAnimation(TranslateTransform.XProperty, _animateX);
                 _translateXY.BeginAnimation(TranslateTransform.YProperty, _animateY);
 
                 _timer = new Timer(Debugger, copterTransform, 0, 1000);
             };
 
+            _translatePitch = new RotateTransform(0);
             _translateXY = new TranslateTransform(copterTransform.X, copterTransform.Y);
 
             var group = new TransformGroup();
             _missile.RenderTransform = group;
             //_missile.RenderTransform = _translateX;
 
-            //group.Children.Add(_translatePitch);
+            group.Children.Add(_translatePitch);
             group.Children.Add(_translateXY);
 
 
