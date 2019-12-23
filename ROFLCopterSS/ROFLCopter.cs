@@ -127,7 +127,7 @@ namespace ROFLCopterSS
 
                 if (fire)
                 {
-                    var delay = _random.Next(0, (_animateX.Duration.TimeSpan.Seconds / 2) * 1000);
+                    var delay = _random.Next(0, (_animateX.Duration.TimeSpan.Seconds) * 1000);
                     // Randomly delayed launch
                     Task.Delay(delay).ContinueWith((t) =>
                     {
