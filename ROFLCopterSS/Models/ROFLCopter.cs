@@ -39,7 +39,7 @@ namespace ROFLCopterSS
 
             var gif = new BitmapImage();
             gif.BeginInit();
-            gif.UriSource = new Uri("roflcropped.gif", UriKind.Relative);
+            gif.UriSource = new Uri("..\\images\\roflcropped.gif", UriKind.Relative);
             gif.EndInit();
 
             ImageBehavior.SetAnimatedSource(_copter, gif);
