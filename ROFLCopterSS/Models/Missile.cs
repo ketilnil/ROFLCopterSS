@@ -89,7 +89,6 @@ namespace ROFLCopterSS
 
             _missile.Loaded += (s, a) =>
             {
-
                 _animateX.Completed += AnimationCompletedHandler;
 
                 _translatePitch.BeginAnimation(RotateTransform.AngleProperty, _animatePitch);

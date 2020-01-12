@@ -53,7 +53,7 @@ namespace ROFLCopterSS
             group.Children.Add(_translatePitch);
             group.Children.Add(_translateXY);
 
-            var easing = new SineEase
+            var easingY = new SineEase
             {
                 EasingMode = EasingMode.EaseInOut
             };
@@ -71,12 +71,12 @@ namespace ROFLCopterSS
 
             _animateY = new DoubleAnimation()
             {
-                EasingFunction = easing,
+                EasingFunction = easingY,
                 AutoReverse = true
             };
 
             _animateX = new DoubleAnimation();
-            _animateX.Completed += AnimationCompletedHandler;
+            _animateX.Completed += OnAnimationCompleted;
 
             _copter.Loaded += (s, a) =>
             {
@@ -90,20 +90,14 @@ namespace ROFLCopterSS
 
         public void Play()
         {
-            Debug.WriteLine($"Copter height: { _copter.ActualHeight }");
-            Debug.WriteLine($"Copter width: { _copter.ActualWidth }");
-
             double width = _activeGrid.RenderSize.Width;
             _animateX.From = ((width / 2) * -1) - _copter.Width;
             _animateX.To   = width / 2 + _copter.Width;
 
-            //_animateY.From = _copter.Height * 2;
-            //_animateY.To   = (_copter.Height * 2) * -1;
+            double height = _activeGrid.RenderSize.Height;
+            _animateY.From = (height / 2) / 2;
+            _animateY.To = ((height / 2) / 2) * -1;
             
-            // HACK: Finn ut hvordan hente riktig height verdi
-            _animateY.From = 115 * 2;
-            _animateY.To = (115 * 2) * -1;
-
             SetSpeedFromSettings(_animateX, _animateY, _animatePitch);
 
             _translatePitch.BeginAnimation(RotateTransform.AngleProperty, _animatePitch);
@@ -176,7 +170,7 @@ namespace ROFLCopterSS
         }
 
 
-        private void AnimationCompletedHandler(object sender, EventArgs args)
+        private void OnAnimationCompleted(object sender, EventArgs args)
         {
             _missile?.Cancel();
             _activeGrid.Children.Remove(_copter);
