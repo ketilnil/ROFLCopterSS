@@ -34,8 +34,8 @@ namespace ROFLCopterSS
 
 #if DEBUG  
                     // Test on one screen, leave VS visible for debug output
-                    if (s.Primary)
-                        continue;
+                    //if (s.Primary)
+                    //    continue;
 #endif
 
 

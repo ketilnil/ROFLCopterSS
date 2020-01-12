@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -22,23 +18,20 @@ namespace ROFLCopterSS
 ";
 
 
-        private readonly TextBlock          _missile;
+        private readonly TextBlock              _missile;
 
-        private readonly TranslateTransform  _translateXY;
-        private readonly RotateTransform     _translatePitch;
-        private DoubleAnimation     _animateX;
-        private DoubleAnimation     _animateY;
-        private DoubleAnimation     _animatePitch;
-        private readonly Grid                _activeGrid;
-
-
+        private readonly TranslateTransform     _translateXY;
+        private readonly RotateTransform        _translatePitch;
+        private readonly DoubleAnimation        _animateX;
+        private readonly DoubleAnimation        _animateY;
+        private readonly DoubleAnimation        _animatePitch;
+        private readonly Grid                   _activeGrid;
 
         private Timer _timer;
 
 
         public Missile(TranslateTransform copterTransform, Duration duration, Grid grid)
         {
-
             _missile = new TextBlock()
             {
                 Text = asciiMissile,
@@ -49,7 +42,6 @@ namespace ROFLCopterSS
                 Height = 70
 
             };
-
 
             var easingX = new ExponentialEase
             {
@@ -67,35 +59,23 @@ namespace ROFLCopterSS
                 EasingMode = EasingMode.EaseOut
             };
 
-
-            _missile.Loaded += (s, a) =>
+            var missileTimeSpan = new TimeSpan(0,0, duration.TimeSpan.Seconds / 2);
+            double width = grid.RenderSize.Width;
+            //_animateX = new DoubleAnimation((width / 2) * -1, (width / 2) + _missile.ActualWidth, new Duration(missileTimeSpan));
+            _animateX = new DoubleAnimation(copterTransform.X, width * 2, new Duration(missileTimeSpan))
             {
-                var missileTimeSpan = new TimeSpan(0,0, duration.TimeSpan.Seconds / 2);
-                double width = grid.RenderSize.Width;
-                //_animateX = new DoubleAnimation((width / 2) * -1, (width / 2) + _missile.ActualWidth, new Duration(missileTimeSpan));
-                _animateX = new DoubleAnimation(copterTransform.X, width * 2, new Duration(missileTimeSpan))
-                {
-                    EasingFunction = easingX
-                };
+                EasingFunction = easingX
+            };
 
-                _animateY = new DoubleAnimation(copterTransform.Y + 100, copterTransform.Y + 200, new Duration(new TimeSpan(0, 0, 1)))
-                {
-                    EasingFunction = easingY
-                };
+            _animateY = new DoubleAnimation(copterTransform.Y + 100, copterTransform.Y + 200, new Duration(new TimeSpan(0, 0, 1)))
+            {
+                EasingFunction = easingY
+            };
 
-                _animatePitch = new DoubleAnimation(0, -5, new Duration(new TimeSpan(0, 0, 1)))
-                {
-                    EasingFunction = easingPitch,
-                    AutoReverse = true
-                };
-
-                _animateX.Completed += AnimationCompletedHandler;
-
-                _translatePitch.BeginAnimation(RotateTransform.AngleProperty, _animatePitch);
-                _translateXY.BeginAnimation(TranslateTransform.XProperty, _animateX);
-                _translateXY.BeginAnimation(TranslateTransform.YProperty, _animateY);
-
-                _timer = new Timer(Debugger, copterTransform, 0, 1000);
+            _animatePitch = new DoubleAnimation(0, -5, new Duration(new TimeSpan(0, 0, 1)))
+            {
+                EasingFunction = easingPitch,
+                AutoReverse = true
             };
 
             _translatePitch = new RotateTransform(0);
@@ -103,35 +83,40 @@ namespace ROFLCopterSS
 
             var group = new TransformGroup();
             _missile.RenderTransform = group;
-            //_missile.RenderTransform = _translateX;
 
             group.Children.Add(_translatePitch);
             group.Children.Add(_translateXY);
 
+            _missile.Loaded += (s, a) =>
+            {
 
+                _animateX.Completed += AnimationCompletedHandler;
+
+                _translatePitch.BeginAnimation(RotateTransform.AngleProperty, _animatePitch);
+                _translateXY.BeginAnimation(TranslateTransform.XProperty, _animateX);
+                _translateXY.BeginAnimation(TranslateTransform.YProperty, _animateY);
+#if DEBUG
+                _timer = new Timer(Debugger, copterTransform, 0, 1000);
+#endif
+            };
 
             _activeGrid = grid;
             _activeGrid.Children.Add(_missile);
         }
 
+
+#if DEBUG
         private void Debugger(object state)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-
                 var x = ((TranslateTransform)state).X;
                 //var x = _translateX.X;
                 //var x = "Hei";
                 Debug.WriteLine($"X: { x }");
             });
-
         }
-
-
-        //public void Launch()
-        //{ 
-
-        //}
+#endif
 
 
         public void Cancel()
@@ -145,15 +130,9 @@ namespace ROFLCopterSS
         }
 
 
-
         private void AnimationCompletedHandler(object sender, EventArgs args)
         {
-            Debug.WriteLine("Ferdig med missile");
             this.Cancel();
-            //if (_missile.Parent is Grid grid)
-            //{
-            //    grid.Children.Remove(_missile);
-            //}
         }
     }
 }
