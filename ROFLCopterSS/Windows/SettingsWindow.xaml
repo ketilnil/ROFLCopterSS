@@ -5,19 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ROFLCopterSS"
         mc:Ignorable="d"
-        Title="Settings" Height="210.793" Width="269.349" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Background="#FF7A95C3">
-    <StackPanel Margin="10">
-        <StackPanel Margin="40,10">
-            <RadioButton x:Name="SpeedSlow" Margin="0,2" GroupName="Speed" Checked="RadioButton_Checked" Content="Slow"/>
-            <RadioButton x:Name="SpeedMedium" Margin="0,2" GroupName="Speed" Checked="RadioButton_Checked" Content="Medium" IsChecked="true"/>
-            <RadioButton x:Name="SpeedFast" Margin="0,2" GroupName="Speed" Checked="RadioButton_Checked" Content="Fast"/>
-        </StackPanel>
-        <CheckBox x:Name="Missile" Margin="40,5" Content="Missile" Click="CheckBox_Click"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Width="80" Height="25" Margin="10,20,10,20" Click="Button_Click_OK" Content="OK" Background="#FF649DCD"/>
-            <Button Width="80" Height="25" Margin="10,20,10,20" Click="Button_Click_Cancel" Content="Cancel" Background="#FF649DCD"/>
-        </StackPanel>
+        FontSize="15"
+        Title="ROFLCopter Settings" Height="297.33" Width="732.815" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="#FF7A95C3" Icon="/ROFLCopterSS;component/Images/Settings.ico">
+    <Grid Margin="30">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         
+        <StackPanel Margin="40,10,40,20" Grid.Column="0" Grid.Row="0">
+            <RadioButton x:Name="SpeedSlow" Margin="0,2" GroupName="Speed" Checked="RadioButton_Checked" Content="Slow" VerticalContentAlignment="Center"/>
+            <RadioButton x:Name="SpeedMedium" Margin="0,2" GroupName="Speed" Checked="RadioButton_Checked" Content="Medium" VerticalContentAlignment="Center" IsChecked="true"/>
+            <RadioButton x:Name="SpeedFast" Margin="0,2,0,0" GroupName="Speed" Checked="RadioButton_Checked" Content="Fast" VerticalContentAlignment="Center"/>
+        </StackPanel>
 
-    </StackPanel>
+        <Image Source="/ROFLCopterSS;component/Images/screenshot.png" Grid.Column="2" Grid.Row="0" Grid.RowSpan="3"/>
+
+        <CheckBox x:Name="Missile" Margin="40,0,40,5" Content="Missile" Click="CheckBox_Click" Grid.Column="0" Grid.Row="1" VerticalContentAlignment="Center"/>
+        
+        <Button Width="90" Height="30" Margin="20,30,5,0" VerticalAlignment="Center" Click="Button_Click_OK" Content="OK" Background="#FF649DCD" Grid.Column="0" Grid.Row="2"/>
+        <Button Width="90" Height="30" Margin="5,30,30,0" VerticalAlignment="Center" Click="Button_Click_Cancel" Content="Cancel" Background="#FF649DCD" Grid.Column="1" Grid.Row="2"/>
+        
+    </Grid>
 </Window>
