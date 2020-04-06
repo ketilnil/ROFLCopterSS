@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ROFLCopterSS"
         mc:Ignorable="d"
         FontSize="15"
-        Title="ROFLCopter Settings" Height="297.33" Width="732.815" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="#FF7A95C3" Icon="/ROFLCopterSS;component/Images/Settings.ico">
+        Title="ROFLCopter Settings" Height="297.33" Width="732.815" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="Manual" Background="#FF7A95C3" Icon="/ROFLCopterSS;component/Images/Settings.ico" WindowStyle="ThreeDBorderWindow">
     <Grid Margin="30">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -29,8 +29,8 @@
 
         <CheckBox x:Name="Missile" Margin="40,0,40,5" Content="Missile" Click="CheckBox_Click" Grid.Column="0" Grid.Row="1" VerticalContentAlignment="Center"/>
         
-        <Button Width="90" Height="30" Margin="20,30,5,0" VerticalAlignment="Center" Click="Button_Click_OK" Content="OK" Background="#FF649DCD" Grid.Column="0" Grid.Row="2"/>
-        <Button Width="90" Height="30" Margin="5,30,30,0" VerticalAlignment="Center" Click="Button_Click_Cancel" Content="Cancel" Background="#FF649DCD" Grid.Column="1" Grid.Row="2"/>
+        <Button Width="110" Height="35" Margin="20,30,5,0" VerticalAlignment="Center" Click="Button_Click_OK" Content="OK" Background="#FF649DCD" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="2"/>
+        <Button Width="110" Height="35" Margin="5,30,30,0" VerticalAlignment="Center" Click="Button_Click_Cancel" Content="Cancel" Background="#FF649DCD" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="2"/>
         
     </Grid>
 </Window>
