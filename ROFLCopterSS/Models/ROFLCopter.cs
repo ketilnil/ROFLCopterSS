@@ -8,13 +8,15 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using WpfAnimatedGif;
+using System.Linq;
+using System.ComponentModel;
 
 namespace ROFLCopterSS
 {
     class ROFLCopter
     {
         private readonly Image               _copter;
-        private readonly List<Grid>          _targetGrids;
+        private readonly Grid                _targetGrid;
         private readonly TranslateTransform  _translateXY;
         private readonly RotateTransform     _translatePitch;
         private readonly DoubleAnimation     _animateX;
@@ -23,17 +25,18 @@ namespace ROFLCopterSS
         private readonly Random              _random = new Random(DateTime.Now.Second);
 
 
-        private Grid                _activeGrid;
+        //private Grid                _activeGrid;
 
         private Missile             _missile;
 
 
-        public ROFLCopter(List<Grid> targetGrids)
+        public ROFLCopter(Grid targetGrid)
         {
             _copter = new Image();
             _copter.Stretch = Stretch.None;
+            _copter.Visibility = Visibility.Hidden;
 
-            _targetGrids = targetGrids;
+            _targetGrid = targetGrid;
 
             var gif = new BitmapImage();
             gif.BeginInit();
@@ -78,31 +81,42 @@ namespace ROFLCopterSS
             _animateX = new DoubleAnimation();
             _animateX.Completed += OnAnimationCompleted;
 
-            _copter.Loaded += (s, a) =>
-            {
-                Play();
-            };
+            //_copter.Loaded += (s, a) =>
+            //{
+            //    //Debug.WriteLine("Copter loaded");
+            //    Play();
+            //};
 
-            SetActiveGrid();
-            _activeGrid.Children.Add(_copter);
+            //_copter.Unloaded += (s, a) =>
+            //{
+            //    //Debug.WriteLine("Copter unloaded");
+            //};
+
+            //SetActiveGrid();
+            _targetGrid.Children.Add(_copter);
         }
+
+
+        public event Action Completed;
 
 
         public void Play()
         {
-            double width = _activeGrid.RenderSize.Width;
+            double width = _targetGrid.RenderSize.Width;
             _animateX.From = ((width / 2) * -1) - _copter.Width;
             _animateX.To   = width / 2 + _copter.Width;
 
-            double height = _activeGrid.RenderSize.Height;
+            double height = _targetGrid.RenderSize.Height;
             _animateY.From = (height / 2) / 2;
             _animateY.To = ((height / 2) / 2) * -1;
             
-            SetSpeedFromSettings(_animateX, _animateY, _animatePitch);
+            SetSpeedFromSettings(_animateX, _animateY, _animatePitch, width);
 
             _translatePitch.BeginAnimation(RotateTransform.AngleProperty, _animatePitch);
             _translateXY.BeginAnimation(TranslateTransform.YProperty, _animateY);
             _translateXY.BeginAnimation(TranslateTransform.XProperty, _animateX);
+
+            _copter.Visibility = Visibility.Visible;
 
             if (App.Settings.Missile)
             {
@@ -116,7 +130,7 @@ namespace ROFLCopterSS
                     {
                         Application.Current.Dispatcher.Invoke(() =>
                         {
-                            _missile = new Missile(_translateXY, _animateX.Duration, _activeGrid);
+                            _missile = new Missile(_translateXY, _animateX.Duration, _targetGrid);
                         });
                     });
                 }
@@ -133,49 +147,73 @@ namespace ROFLCopterSS
         }
 
 
-        private void SetSpeedFromSettings(DoubleAnimation x, DoubleAnimation y, DoubleAnimation pitch)
+        private void SetSpeedFromSettings(DoubleAnimation x, DoubleAnimation y, DoubleAnimation pitch, double screenwidth)
         {
             int seconds;
 
             switch (App.Settings.Speed)
             {
                 case "slow":
-                    seconds = 10;
+                    seconds = 8;
                     break;
                 case "medium":
-                    seconds = 8;
-                    break;
-                case "fast":
                     seconds = 6;
                     break;
+                case "fast":
+                    seconds = 3;
+                    break;
                 default:
-                    seconds = 8;
+                    seconds = 6;
                     break;
             }
 
-            x.Duration = new Duration(new TimeSpan(0, 0, 0, seconds));
-            y.Duration = new Duration(new TimeSpan(0, 0, 0, seconds / 2));
-            pitch.Duration = new Duration(new TimeSpan(0, 0, 0, seconds / 2));
-        }
-
-
-        private void SetActiveGrid()
-        {
-            var index = _targetGrids.IndexOf(_activeGrid);
-
-            // Get index of next grid (screen)
-            index = (++index == _targetGrids.Count ? 0 : index);
             
-            _activeGrid = _targetGrids[index];
+            var widthdelay = (int)screenwidth / 1024;
+            Debug.WriteLine($"seconds: { widthdelay }");
+
+            x.Duration = new Duration(new TimeSpan(0, 0, 0, seconds + widthdelay));
+            y.Duration = new Duration(new TimeSpan(0, 0, 0, (seconds / 2) + widthdelay));
+            pitch.Duration = new Duration(new TimeSpan(0, 0, 0, (seconds / 2) + widthdelay));
         }
+
+
+        //private void SetActiveGrid()
+        //{
+        //    var index = _targetGrid.IndexOf(_activeGrid);
+        //    Debug.WriteLine($"ActivegridIndex: {index}  { _activeGrid?.Tag }");
+
+        //    // Get index of next grid (screen)
+        //    index = (++index == _targetGrid.Count ? 0 : index);
+
+        //    _activeGrid = _targetGrid[index];
+
+        //    Debug.WriteLine($"New ActivegridIndex: {index}  {_activeGrid?.Tag}");
+        //}
 
 
         private void OnAnimationCompleted(object sender, EventArgs args)
         {
             _missile?.Cancel();
-            _activeGrid.Children.Remove(_copter);
-            SetActiveGrid();
-            _activeGrid.Children.Add(_copter);
+
+            Completed?.Invoke();
+
+            //_activeGrid.Children.Remove(_copter);
+
+            ////var dummyGrid = new MainWindow().MainGrid;
+            ////dummyGrid.Children.Add(_copter);
+            ////dummyGrid.Children.Remove(_copter);
+
+            //Debug.WriteLine("Copter removed");
+            ////NameScope.GetNameScope(_activeGrid.Parent).
+            // SetActiveGrid();
+            //_activeGrid.Children.Add(_copter);
+            
+            //Debug.WriteLine("Copter added");
+
+            //Play();
+            ////Debug.WriteLine("Playing animation");
+
+            //Debug.WriteLine($"Children: { _activeGrid.Children.Count }");
         }
     }
 }

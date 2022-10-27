@@ -112,7 +112,7 @@ namespace ROFLCopterSS
                 var x = ((TranslateTransform)state).X;
                 //var x = _translateX.X;
                 //var x = "Hei";
-                Debug.WriteLine($"X: { x }");
+                //Debug.WriteLine($"X: { x }");
             });
         }
 #endif
