@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Diagnostics;
 using System;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace ROFLCopterSS
 {
@@ -14,14 +15,20 @@ namespace ROFLCopterSS
     /// </summary>
     public partial class App : Application
     {
-        private ROFLCopter _copter;
+        private readonly List<ROFLCopter> _copters = new List<ROFLCopter>();
+        private readonly List<Grid> _grids = new List<Grid>();
+        private int _gridIndex = -1;
 
 
         static public Settings Settings = new Settings();
 
         protected override void OnExit(ExitEventArgs e)
         {
-            _copter?.Cancel();
+            foreach (var copter in _copters)
+            {
+                copter.Cancel();
+            }
+            
             base.OnExit(e);
         }
 
@@ -29,7 +36,7 @@ namespace ROFLCopterSS
         {
             if (e.Args.Length == 0 || e.Args[0].ToLower().StartsWith("/s"))
             {
-                var grids = new List<Grid>();
+                
 
                 foreach (Screen s in Screen.AllScreens)
                 {
@@ -48,12 +55,22 @@ namespace ROFLCopterSS
                         Height = s.WorkingArea.Height
                     };
 
-                    grids.Add(window.MainGrid);
+                    var copter = new ROFLCopter(window.MainGrid);
+                    copter.Completed += Copter_Completed;
+                    _copters.Add(copter);
+
+                    window.MainGrid.Tag = s.DeviceName;
+                    
+                    _grids.Add(window.MainGrid);
+                    _gridIndex++;
+
                     window.Show();
                 }
 
+                _gridIndex = 0;
+                _copters[_gridIndex].Play();
 
-                _copter = new ROFLCopter(grids);
+
             }
             else if (e.Args[0].ToLower().StartsWith("/c"))
             {
@@ -67,6 +84,27 @@ namespace ROFLCopterSS
             {
                 Application.Current.Shutdown();
             }
+        }
+
+
+        private void Copter_Completed()
+        {
+            Debug.WriteLine("Copter_Completed");
+            _copters[GetActiveGridIndex()].Play();                    
+        }
+
+
+        private int GetActiveGridIndex()
+        {
+            //var index = _grids.IndexOf(_activeGrid);
+            Debug.WriteLine($"ActivegridIndex: { _gridIndex }  {_grids[_gridIndex]?.Tag}");
+
+            // Get index of next grid (screen)
+            _gridIndex = (++_gridIndex == _grids.Count ? 0 : _gridIndex);
+
+            Debug.WriteLine($"New ActivegridIndex: {_gridIndex}  {_grids[_gridIndex]?.Tag}");
+            
+            return _gridIndex;
         }
 
 
