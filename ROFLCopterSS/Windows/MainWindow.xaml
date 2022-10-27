@@ -10,7 +10,7 @@
         Background="Transparent" WindowStyle="None" ShowInTaskbar="False" ResizeMode="NoResize"
         MouseMove="Window_MouseMove"
         KeyDown="Window_KeyDown"
-        Loaded="Window_Loaded" AllowsTransparency="True"
+        Loaded="Window_Loaded"
         >
         <!--gif:ImageBehavior.AnimateInDesignMode="True"-->
     <Grid x:Name="MainGrid">
