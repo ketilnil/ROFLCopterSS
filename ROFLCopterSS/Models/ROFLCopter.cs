@@ -110,7 +110,7 @@ namespace ROFLCopterSS
             _animateY.From = (height / 2) / 2;
             _animateY.To = ((height / 2) / 2) * -1;
             
-            SetSpeedFromSettings(_animateX, _animateY, _animatePitch);
+            SetSpeedFromSettings(_animateX, _animateY, _animatePitch, width);
 
             _translatePitch.BeginAnimation(RotateTransform.AngleProperty, _animatePitch);
             _translateXY.BeginAnimation(TranslateTransform.YProperty, _animateY);
@@ -147,29 +147,33 @@ namespace ROFLCopterSS
         }
 
 
-        private void SetSpeedFromSettings(DoubleAnimation x, DoubleAnimation y, DoubleAnimation pitch)
+        private void SetSpeedFromSettings(DoubleAnimation x, DoubleAnimation y, DoubleAnimation pitch, double screenwidth)
         {
             int seconds;
 
             switch (App.Settings.Speed)
             {
                 case "slow":
-                    seconds = 10;
+                    seconds = 8;
                     break;
                 case "medium":
-                    seconds = 8;
-                    break;
-                case "fast":
                     seconds = 6;
                     break;
+                case "fast":
+                    seconds = 3;
+                    break;
                 default:
-                    seconds = 8;
+                    seconds = 6;
                     break;
             }
 
-            x.Duration = new Duration(new TimeSpan(0, 0, 0, seconds));
-            y.Duration = new Duration(new TimeSpan(0, 0, 0, seconds / 2));
-            pitch.Duration = new Duration(new TimeSpan(0, 0, 0, seconds / 2));
+            
+            var widthdelay = (int)screenwidth / 1024;
+            Debug.WriteLine($"seconds: { widthdelay }");
+
+            x.Duration = new Duration(new TimeSpan(0, 0, 0, seconds + widthdelay));
+            y.Duration = new Duration(new TimeSpan(0, 0, 0, (seconds / 2) + widthdelay));
+            pitch.Duration = new Duration(new TimeSpan(0, 0, 0, (seconds / 2) + widthdelay));
         }
 
 
